@@ -12,39 +12,25 @@ import pickle
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
+# Importation des données
 X = pd.read_csv (r'C:\Users\Myriam\Excel_pr_python\Data_TRS_Ctrl.csv')
 X = np.array(X)
 print(X)
 
+# Construction du SOM
 XSOM = SOM(m=8, n=8, dim=15)
-Res = XSOM.fit(X)
+
+# Prediction de cluster pour chaque données dans X
 predictions = XSOM.predict(X)
 
+# PCA pour la visualisation
 pca = PCA(n_components=2)
 ND = pca.fit_transform(X)
 
-print(ND.shape)
+# Distance euclidienne de chaque observations initial avec chaque cluster center
+Res= XSOM.fit_transform(X)
 
-print(predictions)
-cluster=[]
-
-# print(ND[:,0].shape)
-
-# for i in range(64):
-#     for j in range(113):
-#         if predictions[j] == i:
-#             cluster.append(predictions[j])
-#             j+=1
-#     i+=1
-
-
-with open('PSY3008','wb') as outfile:
-    pickle.dump(XSOM,outfile)
-        
-
-
-
-
-
-
-
+# concatenation des observations transformé avec PCA et leur clusters prédits
+pred=predictions[:,np.newaxis]
+print(pred.shape)
+New_ND=np.concatenate((ND,pred),axis=1)
